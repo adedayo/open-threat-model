@@ -3,7 +3,7 @@ package otm_test
 import (
 	"testing"
 
-	otm "github.com/adedayo/otm/pkg"
+	otm "github.com/adedayo/open-threat-model/pkg"
 )
 
 func TestParse(t *testing.T) {

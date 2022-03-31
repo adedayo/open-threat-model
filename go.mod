@@ -1,4 +1,4 @@
-module github.com/adedayo/otm
+module github.com/adedayo/open-threat-model
 
 go 1.17
 
