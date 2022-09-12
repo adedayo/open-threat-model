@@ -12,6 +12,51 @@ type OpenThreatModel struct {
 	Mitigations     []Mitigation     `yaml:"mitigations,omitempty" json:"mitigations,omitempty"`
 }
 
+//Gets model entity's name by its id. If no entity has specified id, then return value of found is set to false
+func (tm OpenThreatModel) GetNameByID(id string) (name string, found bool) {
+
+	if tm.Project.ID == id {
+		return tm.Project.Name, true
+	}
+
+	for _, x := range tm.TrustZones {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.Components {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.Assets {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.DataFlows {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.Threats {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.Mitigations {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	for _, x := range tm.Representations {
+		if x.ID == id {
+			return x.Name, true
+		}
+	}
+	return
+}
+
 type Project struct {
 	Name         string     `yaml:"name" json:"name"`
 	ID           string     `yaml:"id" json:"id"`
@@ -25,19 +70,19 @@ type Mitigation struct {
 	Name          string     `yaml:"name" json:"name"`
 	ID            string     `yaml:"id" json:"id"`
 	Description   string     `yaml:"description,omitempty" json:"description,omitempty"`
-	RiskReduction int        `yaml:"riskReduction" json:"riskReduction"`
+	RiskReduction *int       `yaml:"riskReduction,omitempty" json:"riskReduction,omitempty"`
 	Attributes    Attributes `yaml:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type Threat struct {
-	Name        string     `yaml:"name" json:"name"`
-	ID          string     `yaml:"id" json:"id"`
-	Description string     `yaml:"description,omitempty" json:"description,omitempty"`
-	Categories  []string   `yaml:"categories,omitempty" json:"categories,omitempty"`
-	CWEs        []string   `yaml:"cwes,omitempty" json:"cwes,omitempty"`
-	Risk        ThreatRisk `yaml:"risk" json:"risk"`
-	Tags        []string   `yaml:"tags,omitempty" json:"tags,omitempty"`
-	Attributes  Attributes `yaml:"attributes,omitempty" json:"attributes,omitempty"`
+	Name        string      `yaml:"name" json:"name"`
+	ID          string      `yaml:"id" json:"id"`
+	Description string      `yaml:"description,omitempty" json:"description,omitempty"`
+	Categories  []string    `yaml:"categories,omitempty" json:"categories,omitempty"`
+	CWEs        []string    `yaml:"cwes,omitempty" json:"cwes,omitempty"`
+	Risk        *ThreatRisk `yaml:"risk,omitempty" json:"risk,omitempty"`
+	Tags        []string    `yaml:"tags,omitempty" json:"tags,omitempty"`
+	Attributes  Attributes  `yaml:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type ThreatRisk struct {
@@ -51,8 +96,8 @@ type TrustZone struct {
 	Name            string                    `yaml:"name" json:"name"`
 	ID              string                    `yaml:"id" json:"id"`
 	Description     string                    `yaml:"description,omitempty" json:"description,omitempty"`
-	Risk            TrustZoneRisk             `yaml:"risk" json:"risk"`
-	Parent          Parent                    `yaml:"parent,omitempty" json:"parent,omitempty"`
+	Risk            *TrustZoneRisk            `yaml:"risk,omitempty" json:"risk,omitempty"`
+	Parent          *Parent                   `yaml:"parent,omitempty" json:"parent,omitempty"`
 	Representations []RepresentationInterface `yaml:"representations,omitempty" json:"representations,omitempty"`
 	Attributes      Attributes                `yaml:"attributes,omitempty" json:"attributes,omitempty"`
 }
@@ -95,8 +140,8 @@ type DiagramRepresentation struct {
 	Representation          string     `yaml:"representation" json:"representation"`
 	Type                    string     `yaml:"type" json:"type"`
 	Attributes              Attributes `yaml:"attributes,omitempty" json:"attributes,omitempty"`
-	Position                Position   `yaml:"position" json:"position"`
-	Size                    Dimension  `yaml:"size" json:"size"`
+	Position                *Position  `yaml:"position,omitempty" json:"position,omitempty"`
+	Size                    *Dimension `yaml:"size,omitempty" json:"size,omitempty"`
 }
 
 type CodeRepresentation struct {
@@ -117,16 +162,17 @@ type Asset struct {
 	Name        string     `yaml:"name" json:"name"`
 	ID          string     `yaml:"id" json:"id"`
 	Description string     `yaml:"description,omitempty" json:"description,omitempty"`
-	Risk        AssetRisk  `yaml:"risk" json:"risk"`
+	Risk        *AssetRisk `yaml:"risk,omitempty" json:"risk,omitempty"`
 	Attributes  Attributes `yaml:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type Component struct {
 	Name            string                    `yaml:"name" json:"name"`
 	ID              string                    `yaml:"id" json:"id"`
+	Type            string                    `yaml:"type" json:"type"`
 	Description     string                    `yaml:"description,omitempty" json:"description,omitempty"`
 	Tags            []string                  `yaml:"tags,omitempty" json:"tags,omitempty"`
-	Parent          Parent                    `yaml:"parent,omitempty" json:"parent,omitempty"`
+	Parent          *Parent                   `yaml:"parent,omitempty" json:"parent,omitempty"`
 	Representations []RepresentationInterface `yaml:"representations,omitempty" json:"representations,omitempty"`
 	Assets          *AssetInstance            `yaml:"assets,omitempty" json:"assets,omitempty"`
 	Threats         []ThreatInstance          `yaml:"threats,omitempty" json:"threats,omitempty"`
@@ -151,6 +197,21 @@ type AssetInstance struct {
 type Parent struct {
 	TrustZone string `yaml:"trustZone,omitempty" json:"trustZone,omitempty"`
 	Component string `yaml:"component,omitempty" json:"component,omitempty"`
+}
+
+func (p Parent) IsTrustZone() bool {
+	return p.TrustZone != ""
+}
+
+func (p Parent) IsComponent() bool {
+	return p.Component != ""
+}
+
+func (p Parent) GetID() string {
+	if p.IsTrustZone() {
+		return p.TrustZone
+	}
+	return p.Component
 }
 
 type AssetRisk struct {

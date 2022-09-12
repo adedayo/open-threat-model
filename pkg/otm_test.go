@@ -12,6 +12,7 @@ func TestParse(t *testing.T) {
 
 func makeModel() otm.OpenThreatModel {
 
+	x := 0
 	tm := otm.OpenThreatModel{
 		OTMVersion: "0.1.0",
 		Project: otm.Project{
@@ -38,7 +39,7 @@ func makeModel() otm.OpenThreatModel {
 				Name:        "Credit Card",
 				ID:          "cc-data",
 				Description: "Customer Credit Card record",
-				Risk: otm.AssetRisk{
+				Risk: &otm.AssetRisk{
 					Confidentiality: 100,
 					Integrity:       50,
 					Availability:    50,
@@ -53,9 +54,8 @@ func makeModel() otm.OpenThreatModel {
 				ID:          "",
 				Description: "",
 				Tags:        []string{"x", "y", "z"},
-				Parent: otm.Parent{
+				Parent: &otm.Parent{
 					TrustZone: "",
-					Component: "",
 				},
 				Representations: []otm.RepresentationInterface{
 					otm.CodeRepresentation{
@@ -77,8 +77,8 @@ func makeModel() otm.OpenThreatModel {
 						Representation: "",
 						Type:           "",
 						Attributes:     otm.Attributes{"a": "b"},
-						Position:       otm.Position{X: 12, Y: 29},
-						Size:           otm.Dimension{Width: 0, Height: 0},
+						Position:       &otm.Position{X: 12, Y: 29},
+						Size:           &otm.Dimension{Width: 0, Height: 0},
 					},
 				},
 				Assets: &otm.AssetInstance{
@@ -127,11 +127,13 @@ func makeModel() otm.OpenThreatModel {
 		},
 		TrustZones: []otm.TrustZone{
 			{
-				Name:            "Name",
-				ID:              "ID",
-				Description:     "A description",
-				Risk:            otm.TrustZoneRisk{},
-				Parent:          otm.Parent{},
+				Name:        "Name",
+				ID:          "ID",
+				Description: "A description",
+				Risk: &otm.TrustZoneRisk{
+					TrustRating: 20,
+				},
+				Parent:          &otm.Parent{},
 				Representations: []otm.RepresentationInterface{},
 				Attributes:      otm.Attributes{"a": "b"},
 			},
@@ -143,7 +145,7 @@ func makeModel() otm.OpenThreatModel {
 				Description: "",
 				Categories:  []string{"m"},
 				CWEs:        []string{"x"},
-				Risk: otm.ThreatRisk{
+				Risk: &otm.ThreatRisk{
 					Likelihood:        0,
 					LikelihoodComment: "",
 					Impact:            0,
@@ -158,7 +160,7 @@ func makeModel() otm.OpenThreatModel {
 				Name:          "Name",
 				ID:            "ID",
 				Description:   "A description",
-				RiskReduction: 0,
+				RiskReduction: &x,
 				Attributes:    otm.Attributes{"a": "b"},
 			},
 		},
