@@ -12,7 +12,7 @@ type OpenThreatModel struct {
 	Mitigations     []Mitigation     `yaml:"mitigations,omitempty" json:"mitigations,omitempty"`
 }
 
-//Gets model entity's name by its id. If no entity has specified id, then return value of found is set to false
+// Gets model entity's name by its id. If no entity has specified id, then return value of found is set to false
 func (tm OpenThreatModel) GetNameByID(id string) (name string, found bool) {
 
 	if tm.Project.ID == id {
@@ -158,6 +158,14 @@ type CodeRepresentation struct {
 	CodeSnippet             string      `yaml:"codeSnippet" json:"codeSnippet"`
 }
 
+type ThreatModelRepresentation struct {
+	RepresentationInterface `yaml:"-" json:"-"`
+	Name                    string     `yaml:"name" json:"name"`
+	ID                      string     `yaml:"id" json:"id"`
+	Representation          string     `yaml:"representation" json:"representation"`
+	Attributes              Attributes `yaml:"attributes,omitempty" json:"attributes,omitempty"`
+}
+
 type Asset struct {
 	Name        string     `yaml:"name" json:"name"`
 	ID          string     `yaml:"id" json:"id"`
@@ -194,6 +202,8 @@ type AssetInstance struct {
 	Processed []string `yaml:"processed,omitempty" json:"processed,omitempty"`
 	Stored    []string `yaml:"stored,omitempty" json:"stored,omitempty"`
 }
+
+// Parent ID. A parent can be a TrustZone or a component
 type Parent struct {
 	TrustZone string `yaml:"trustZone,omitempty" json:"trustZone,omitempty"`
 	Component string `yaml:"component,omitempty" json:"component,omitempty"`

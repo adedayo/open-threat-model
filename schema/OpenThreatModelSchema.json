@@ -282,10 +282,15 @@
                             "size": {
                                 "$ref": "#/definitions/Size",
                                 "description": "This contains the information regarding the diagram size"
+                            },
+                            "position": {
+                                "$ref": "#/definitions/Position",
+                                "description": "This node contains all the information about the location of the element within the diagram"
                             }
                         },
                         "required": [
-                            "size"
+                            "size",
+                            "position"
                         ]
                     }
                 },
@@ -304,9 +309,20 @@
                                 "description": "Contains information about the repository: where the referenced code is located"
                             }
                         },
-                        "required": [
-                            "repository"
-                        ]
+                        "required": []
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "const": "threat-model"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {},
+                        "required": []
                     }
                 }
             ],
@@ -336,7 +352,8 @@
                     "type": "string",
                     "enum": [
                         "diagram",
-                        "code"
+                        "code",
+                        "threat-model"
                     ],
                     "description": "Type of representation",
                     "examples": [
@@ -363,6 +380,9 @@
                 },
                 {
                     "$ref": "#/definitions/CodeRepresentation"
+                },
+                {
+                    "$ref": "#/definitions/ThreatModelRepresentation"
                 }
             ],
             "title": "Representation"
@@ -477,6 +497,40 @@
                 "representation"
             ],
             "title": "Code Representation"
+        },
+        "ThreatModelRepresentation": {
+            "type": "object",
+            "properties": {
+                "representation": {
+                    "type": "string",
+                    "description": "ID of the representation on which this element is represented",
+                    "examples": [
+                        "archtitecture-threat-model"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name for the representation element",
+                    "examples": [
+                        "Threat model representation"
+                    ]
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier of the current representation instance",
+                    "examples": [
+                        "threat-model-representation-id"
+                    ]
+                },
+                "attributes": {
+                    "$ref": "#/definitions/Attributes"
+                }
+            },
+            "required": [
+                "id",
+                "representation"
+            ],
+            "title": "Threat Model Representation"
         },
         "Position": {
             "type": "object",
@@ -875,6 +929,13 @@
                         "internet"
                     ]
                 },
+                "type": {
+                    "type": "string",
+                    "description": "Type for the trust zone",
+                    "examples": [
+                        "internet"
+                    ]
+                },
                 "description": {
                     "type": "string",
                     "description": "Short description for the trust zone",
@@ -905,7 +966,8 @@
             "required": [
                 "id",
                 "name",
-                "risk"
+                "risk",
+                "type"
             ],
             "title": "Trust Zone"
         },
