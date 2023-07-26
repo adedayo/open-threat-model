@@ -1,0 +1,632 @@
+openapi: 3.0.3
+info:
+  title: Open Threat Model Specification
+  version: 0.1.0
+  description: A Schema Definition for Open Threat Model https://github.com/iriusrisk/OpenThreatModel"
+  contact:
+    name: Security Audit Labs
+    url: https://cysoh.com
+    email: info@cysoh.com
+
+paths:
+  /version:
+    get:
+      operationId: version
+      tags:
+        - api
+      description: get version of the spec
+      responses:
+        '200':
+          description: 'API version'
+          content:
+            text/plain:
+              schema: 
+                type: string
+  /model: 
+    get: 
+      operationId: model
+      tags:
+        - api
+      description: get the model structure
+      responses:
+        '200':
+          description: model structure
+          content:
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/OpenThreatModel"
+
+components:
+  schemas:
+    OpenThreatModel:
+      type: object
+      required:
+        - otmVersion
+        - project
+      properties:
+        otmVersion:
+          type: string
+          description: states the OTM semantic version used in the current file. It is an important field in order to ensure backwards compatibility.
+          default: "0.1.0"
+        project:
+          description: Project represents the entity within which all the other elements are grouped. It's the unit of work.
+          $ref: "#/components/schemas/Project"
+        representations:
+          description: define different ways in which the project may be represented. Representation is an abstract concept and there might be several implementations
+          type: array
+          items:
+             $ref: "#/components/schemas/Representation"
+        assets:
+          description: are the different kinds of sensible information that take part in our threat model.
+          type: array
+          items:
+            $ref: "#/components/schemas/Asset"
+        components:
+          description: are the different pieces of software / hardware that make up our project.
+          type: array
+          items:
+            $ref: "#/components/schemas/Component"
+        dataflows:
+          description: are the elements that describe the movement of relevant information (assets) across our architecture.
+          type: array
+          items:
+            $ref: "#/components/schemas/Dataflow"
+        trustZones:
+          description: "are the different areas within which components are located. They define how trustworthy an area is, based on how accessible it is: the more accessible, the less trustworthy."
+          type: array
+          items:
+            $ref: "#/components/schemas/TrustZone"
+        threats:
+          description: are the undesirable outcomes that can occur in our system and that we want to prevent.
+          type: array
+          items:
+            $ref: "#/components/schemas/Threat"
+        mitigations:
+          description: are the actions that we can take (or controls that we can put in place) in order to prevent a threat from taking place.
+          type: array
+          items:
+            $ref: "#/components/schemas/Mitigation"
+    
+    Project:
+      type: object
+      description: Project represents the entity within which all the other elements are grouped. It's the unit of work.
+      title: Project
+      required:
+        - id
+        - name
+      properties:
+        name:
+          description: Name of project
+          type: string
+        id:
+          description: Unique identifier for the project
+          type: string
+        description:
+          description: Short description for the project
+          type: string
+        owner: 
+          description: Name of the project's owner. This is the person responsible for the project
+          type: string
+        ownerContact:
+          description: Project owner's contact email
+          type: string
+        tags:
+          description: Array of labels to tag the project
+          type: array
+          items:
+            type: string
+        attributes:
+          description: This is a free-form map of attributes that complete the information about the project
+          $ref: "#/components/schemas/Attributes"
+
+   
+    Repository:
+      type: object
+      properties:
+        url:
+          type: string
+
+    Representation:
+      type: object
+      required:
+        - name
+        - id
+        - type
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - diagram
+            - code
+            - threat-model
+        description:
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+      discriminator:
+        propertyName: type
+      # anyOf:
+      #   - $ref: "#/components/schemas/diagram"
+      #   - $ref: "#/components/schemas/code"
+      #   - $ref: "#/components/schemas/threat-model"
+        
+          
+    DiagramRepresentation:
+      type: object
+      required:
+        - name
+        - id
+        - type
+        - size
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - diagram
+        description:
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+        size:
+              $ref: "#/components/schemas/Size"
+
+
+    CodeRepresentation:
+      type: object
+      required:
+        - name
+        - id
+        - type
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - code
+        description:
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+        repository: 
+          $ref: '#/components/schemas/Repository'
+    
+
+    ThreatModelRepresentation:
+      type: object
+      required:
+        - name
+        - id
+        - type
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - threat-model
+        description:
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+      
+    Asset:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        description: 
+          type: string
+        risk:
+          $ref: "#/components/schemas/AssetRisk"
+        attributes: 
+          $ref: "#/components/schemas/Attributes"
+    
+    
+    Component:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - parent
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        parent:
+          $ref: "#/components/schemas/Parent"
+        representations:
+          type: array
+          items:
+            anyOf:
+            - $ref: "#/components/schemas/DiagramRepresentation"
+            - $ref: "#/components/schemas/CodeRepresentation"
+            - $ref: "#/components/schemas/ThreatModelRepresentation"
+            
+        assets: 
+          type: array
+          items:
+            $ref: "#/components/schemas/AssetInstance"
+        threats:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThreatInstance"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+    Dataflow:
+      type: object
+      required:
+        - id
+        - name
+        - source
+        - destination
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        bidirectional:
+          type: boolean
+        source:
+          type: string
+        destination:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        threats:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThreatInstance"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+
+    TrustZone:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - risk
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        risk: 
+          $ref: "#/components/schemas/TrustZoneRisk"
+        parent: 
+          $ref: "#/components/schemas/Parent"
+        representations:
+          type: array
+          items:
+            allOf: #the representation schema is broken, so this is an approximation
+              - $ref: "#/components/schemas/DiagramRepresentationElement"
+              - $ref: "#/components/schemas/CodeRepresentationElement"
+              - $ref: "#/components/schemas/ThreatModelRepresentationElement"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+
+    Threat:
+      type: object
+      required:
+        - id
+        - name
+        - risk
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        description: 
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        cwes:
+          type: array
+          items:
+            type: string
+        risk:
+          $ref: "#/components/schemas/ThreatRisk"
+        tags:
+          type: array
+          items:
+            type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+
+    Mitigation:
+      type: object
+      required:
+        - id
+        - name
+        - riskReduction
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        description: 
+          type: string
+        riskReduction:
+          type: integer
+          minimum: 0
+          maximum: 100
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    
+    Attributes:
+      type: object
+      additionalProperties: 
+        type: string
+
+    Size:
+      type: object
+      required:
+        - width
+        - height
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+    
+    Position:
+      type: object
+      required:
+        - "x"
+        - "y"
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+        
+    AssetRisk:
+      type: object
+      required:
+        - confidentiality
+        - integrity
+        - availability
+      properties:
+        confidentiality:
+          type: integer
+          maximum: 100
+          minimum: 0
+        integrity:
+          type: integer
+          maximum: 100
+          minimum: 0
+        availability:
+          type: integer
+          maximum: 100
+          minimum: 0
+        comment:
+          type: string
+    
+    Parent:
+      type: object
+      required:
+        - trustZone
+        - component
+      properties:
+        trustZone: 
+          $ref: "#/components/schemas/TrustZoneParent"
+        component: 
+          $ref: "#/components/schemas/ComponentParent"
+        # oneOf:
+        #   - $ref: "#/components/schemas/TrustZoneParent"
+        #   - $ref: "#/components/schemas/ComponentParent"
+          
+
+    # RepresentationElement:
+    #   type: object
+    #   required:
+    #     - representation
+    #     - id
+    #     - position
+    #     - size
+    #   properties:
+    #     representation:
+    #       type: string
+    #     id: 
+    #       type: string
+    #     name: 
+    #       type: string
+    #     position: 
+    #       $ref: "#/components/schemas/Position"
+    #     size: 
+    #       $ref: "#/components/schemas/Size"
+    #     attributes:
+    #       $ref: "#/components/schemas/Attributes"
+
+    DiagramRepresentationElement:
+      type: object
+      required:
+        - representation
+        - id
+        # - position #the representation schema is broken, so this is an approximation
+        # - size #the representation schema is broken, so this is an approximation
+      properties:
+        representation:
+          type: string
+        id: 
+          type: string
+        name: 
+          type: string
+        position: 
+          $ref: "#/components/schemas/Position"
+        size: 
+          $ref: "#/components/schemas/Size"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    
+    CodeRepresentationElement:
+      type: object
+      required:
+        - representation
+        - id
+      properties:
+        representation:
+          type: string
+        id: 
+          type: string
+        name: 
+          type: string
+        file: 
+          type: string
+        line: 
+          type: integer
+        codeSnippet: 
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+    ThreatModelRepresentationElement:
+      type: object
+      required:
+        - representation
+        - id
+      properties:
+        representation:
+          type: string
+        id: 
+          type: string
+        name: 
+          type: string
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+
+
+    AssetInstance:
+      type: object
+      properties:
+        processed:
+          type: array
+          items:
+            type: string
+        stored:
+          type: array
+          items:
+            type: string
+
+    
+    ThreatInstance:
+      type: object
+      required:
+        - threat
+        - state
+      properties:
+        threat:
+          type: string
+        state:
+          type: string
+        mitigations:
+          type: array
+          items:
+            $ref: "#/components/schemas/MitigationInstance"
+    
+    
+    ThreatRisk:
+      type: object
+      required:
+        - likelihood
+        - impact
+      properties:
+        likelihood:
+          type: integer
+          minimum: 0
+          maximum: 100
+        likelihoodComment:
+          type: string
+        impact:
+          type: integer
+          minimum: 0
+          maximum: 100
+        impactComment:
+          type: string
+
+
+
+    TrustZoneRisk:
+      type: object
+      required:
+        - trustRating
+      properties:
+        trustRating:
+          type: integer
+          minimum: 0
+          maximum: 100
+
+    
+    TrustZoneParent:
+      type: object
+      required:
+        - trustZone
+      properties:
+        trustZone:
+          type: string
+    
+
+    ComponentParent:
+      type: object
+      required:
+        - component
+      properties:
+        component:
+          type: string
+    
+    MitigationInstance:
+      type: object
+      required:
+        - mitigation
+        - state
+      properties:
+        mitigation:
+          type: string
+        state:
+          type: string
