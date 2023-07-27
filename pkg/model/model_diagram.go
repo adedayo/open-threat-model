@@ -21,7 +21,7 @@ var _ MappedNullable = &Diagram{}
 // Diagram struct for Diagram
 type Diagram struct {
 	Representation
-	Size Size `json:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"json:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size""`
+	Size Size `json:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"json:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size" yaml:"size""`
 }
 
 // NewDiagram instantiates a new Diagram object

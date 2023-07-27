@@ -21,7 +21,7 @@ var _ MappedNullable = &Code{}
 // Code struct for Code
 type Code struct {
 	Representation
-	Repository *Repository `json:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"json:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty""`
+	Repository *Repository `json:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"json:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty" yaml:"repository,omitempty""`
 }
 
 // NewCode instantiates a new Code object

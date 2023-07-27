@@ -450,17 +450,11 @@ components:
     
     Parent:
       type: object
-      required:
-        - trustZone
-        - component
       properties:
         trustZone: 
-          $ref: "#/components/schemas/TrustZoneParent"
+          type: string
         component: 
-          $ref: "#/components/schemas/ComponentParent"
-        # oneOf:
-        #   - $ref: "#/components/schemas/TrustZoneParent"
-        #   - $ref: "#/components/schemas/ComponentParent"
+          type: string
           
 
     # RepresentationElement:
@@ -603,22 +597,22 @@ components:
           maximum: 100
 
     
-    TrustZoneParent:
-      type: object
-      required:
-        - trustZone
-      properties:
-        trustZone:
-          type: string
+    # TrustZoneParent:
+    #   type: object
+    #   required:
+    #     - trustZone
+    #   properties:
+    #     trustZone:
+    #       type: string
     
 
-    ComponentParent:
-      type: object
-      required:
-        - component
-      properties:
-        component:
-          type: string
+    # ComponentParent:
+    #   type: object
+    #   required:
+    #     - component
+    #   properties:
+    #     component:
+    #       type: string
     
     MitigationInstance:
       type: object

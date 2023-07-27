@@ -20,18 +20,16 @@ var _ MappedNullable = &Parent{}
 
 // Parent struct for Parent
 type Parent struct {
-	TrustZone TrustZoneParent `json:"trustZone" yaml:"trustZone"`
-	Component ComponentParent `json:"component" yaml:"component"`
+	TrustZone *string `json:"trustZone,omitempty" yaml:"trustZone,omitempty"`
+	Component *string `json:"component,omitempty" yaml:"component,omitempty"`
 }
 
 // NewParent instantiates a new Parent object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewParent(trustZone TrustZoneParent, component ComponentParent) *Parent {
+func NewParent() *Parent {
 	this := Parent{}
-	this.TrustZone = trustZone
-	this.Component = component
 	return &this
 }
 
@@ -43,52 +41,68 @@ func NewParentWithDefaults() *Parent {
 	return &this
 }
 
-// GetTrustZone returns the TrustZone field value
-func (o *Parent) GetTrustZone() TrustZoneParent {
-	if o == nil {
-		var ret TrustZoneParent
+// GetTrustZone returns the TrustZone field value if set, zero value otherwise.
+func (o *Parent) GetTrustZone() string {
+	if o == nil || IsNil(o.TrustZone) {
+		var ret string
 		return ret
 	}
-
-	return o.TrustZone
+	return *o.TrustZone
 }
 
-// GetTrustZoneOk returns a tuple with the TrustZone field value
+// GetTrustZoneOk returns a tuple with the TrustZone field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Parent) GetTrustZoneOk() (*TrustZoneParent, bool) {
-	if o == nil {
+func (o *Parent) GetTrustZoneOk() (*string, bool) {
+	if o == nil || IsNil(o.TrustZone) {
 		return nil, false
 	}
-	return &o.TrustZone, true
+	return o.TrustZone, true
 }
 
-// SetTrustZone sets field value
-func (o *Parent) SetTrustZone(v TrustZoneParent) {
-	o.TrustZone = v
+// HasTrustZone returns a boolean if a field has been set.
+func (o *Parent) HasTrustZone() bool {
+	if o != nil && !IsNil(o.TrustZone) {
+		return true
+	}
+
+	return false
 }
 
-// GetComponent returns the Component field value
-func (o *Parent) GetComponent() ComponentParent {
-	if o == nil {
-		var ret ComponentParent
+// SetTrustZone gets a reference to the given string and assigns it to the TrustZone field.
+func (o *Parent) SetTrustZone(v string) {
+	o.TrustZone = &v
+}
+
+// GetComponent returns the Component field value if set, zero value otherwise.
+func (o *Parent) GetComponent() string {
+	if o == nil || IsNil(o.Component) {
+		var ret string
 		return ret
 	}
-
-	return o.Component
+	return *o.Component
 }
 
-// GetComponentOk returns a tuple with the Component field value
+// GetComponentOk returns a tuple with the Component field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Parent) GetComponentOk() (*ComponentParent, bool) {
-	if o == nil {
+func (o *Parent) GetComponentOk() (*string, bool) {
+	if o == nil || IsNil(o.Component) {
 		return nil, false
 	}
-	return &o.Component, true
+	return o.Component, true
 }
 
-// SetComponent sets field value
-func (o *Parent) SetComponent(v ComponentParent) {
-	o.Component = v
+// HasComponent returns a boolean if a field has been set.
+func (o *Parent) HasComponent() bool {
+	if o != nil && !IsNil(o.Component) {
+		return true
+	}
+
+	return false
+}
+
+// SetComponent gets a reference to the given string and assigns it to the Component field.
+func (o *Parent) SetComponent(v string) {
+	o.Component = &v
 }
 
 func (o Parent) MarshalJSON() ([]byte, error) {
@@ -101,8 +115,12 @@ func (o Parent) MarshalJSON() ([]byte, error) {
 
 func (o Parent) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["trustZone"] = o.TrustZone
-	toSerialize["component"] = o.Component
+	if !IsNil(o.TrustZone) {
+		toSerialize["trustZone"] = o.TrustZone
+	}
+	if !IsNil(o.Component) {
+		toSerialize["component"] = o.Component
+	}
 	return toSerialize, nil
 }
 

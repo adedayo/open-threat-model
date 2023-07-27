@@ -20,7 +20,7 @@ var _ MappedNullable = &ComponentParent{}
 
 // ComponentParent struct for ComponentParent
 type ComponentParent struct {
-	Component string `json:"component" yaml:"component"`
+	Component string `json:"component" yaml:"component" yaml:"component" yaml:"component"`
 }
 
 // NewComponentParent instantiates a new ComponentParent object

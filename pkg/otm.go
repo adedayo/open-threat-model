@@ -72,9 +72,7 @@ func MakeModel() otm.OpenThreatModel {
 				Description: &componentDesc,
 				Tags:        []string{"x", "y", "z"},
 				Parent: otm.Parent{
-					TrustZone: otm.TrustZoneParent{
-						TrustZone: tz,
-					},
+					TrustZone: &tz,
 				},
 				Representations: []otm.ComponentRepresentationsInner{
 					{

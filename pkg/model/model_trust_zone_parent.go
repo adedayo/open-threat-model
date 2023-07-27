@@ -20,7 +20,7 @@ var _ MappedNullable = &TrustZoneParent{}
 
 // TrustZoneParent struct for TrustZoneParent
 type TrustZoneParent struct {
-	TrustZone string `json:"trustZone" yaml:"trustZone"`
+	TrustZone string `json:"trustZone" yaml:"trustZone" yaml:"trustZone" yaml:"trustZone"`
 }
 
 // NewTrustZoneParent instantiates a new TrustZoneParent object
